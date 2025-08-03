@@ -360,69 +360,86 @@ class QuickActionsCard extends StatelessWidget {
   const QuickActionsCard({
     super.key,
   });
+
   Widget smallButton(IconData icon, String title, String subtitle, BuildContext context, int index) {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(icon, color: primaryColor, size: 30,),
-          onPressed: () {
-            if(index==0) {
+    return Expanded(
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(defaultBorderRadius),
+        elevation: 0,
+        child: InkWell(
+          onTap: () {
+            if (index == 0) {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => ChatbotScreen()),
               );
-            } else if (index==1) {
+            } else if (index == 1) {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => PhoneCallScreen()),
               );
             }
           },
-        ),
-        Text(
-          title,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w500
+          borderRadius: BorderRadius.circular(defaultBorderRadius),
+          //highlightColor: Colors.red,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(defaultBorderRadius),
+              border: Border.all(color: primaryColor, width: 2),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: Column(
+              children: [
+                Icon(icon, color: primaryColor, size: 35,),
+                Text(
+                  title,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        Text(
-          subtitle,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
+      ));
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: grayBoxDecoration,
-      padding: EdgeInsets.all(16),
+      //decoration: grayBoxDecoration,
+      //padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 24,
+        spacing: 8,
         children: [
           Text(
             "Quick Actions",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.bold
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            spacing: 16,
             children: [
               smallButton(Icons.chat_bubble, "Chat with AI", "Get help with\nyour actions", context, 0),
               smallButton(Icons.phone, "Talk with AI", "Trouble texting?\nMake a call now.", context, 1),
-              smallButton(Icons.timer_rounded, "Set Reminders", "Stay on task\nwith tasks", context, 2),
             ],
           )
         ],
