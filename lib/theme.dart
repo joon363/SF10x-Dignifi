@@ -34,6 +34,17 @@ class AppTheme {
           },
         ),
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,                       // default bg
+          foregroundColor: primaryColor,                        // text / icon color
+          side: const BorderSide(color: primaryColor, width: 2),           // border
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+        ),
+      ),
     );
   }
 }

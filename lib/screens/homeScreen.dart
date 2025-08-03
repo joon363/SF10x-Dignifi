@@ -386,7 +386,7 @@ class QuickActionsCard extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(defaultBorderRadius),
-              border: Border.all(color: primaryColor, width: 2),
+              border: Border.all(color: primaryColor, width: 1),
             ),
             padding: EdgeInsets.symmetric(vertical: 4),
             child: Column(

@@ -41,6 +41,7 @@ dependencies:
   gpt_markdown: ^1.1.2
   webview_flutter: ^4.13.0
   vapi: ^0.1.0
+  simple_ripple_animation: ^0.1.0
 
 dev_dependencies:
   flutter_test:
