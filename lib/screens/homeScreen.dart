@@ -179,7 +179,7 @@ class _PageViewCardState extends State<PageViewCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(3, (i) {
               return Container(
-                margin: EdgeInsets.only(left: 4, right:4, top:12),
+                margin: EdgeInsets.only(left: 4, right: 4, top: 12),
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
@@ -213,7 +213,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
       create: (_) => TaskViewModel(taskGroup: widget.group),
       child: Builder(builder: (context) {
           final tasksVM = context.watch<TaskViewModel>();
-          String undoneTask = tasksVM.getNextUndoneTask()?.title??'All Completed!';
+          String undoneTask = tasksVM.getNextUndoneTask()?.title ?? 'All Completed!';
           return Container(
             decoration: grayBoxDecoration,
             padding: EdgeInsets.all(16),
@@ -312,7 +312,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                     Row(
                       spacing: 8,
                       children: [
-                        Icon(undoneTask=='All Completed!'?Icons.local_fire_department_sharp:Icons.check_box_outline_blank, color: Colors.black54,),
+                        Icon(undoneTask == 'All Completed!' ? Icons.local_fire_department_sharp : Icons.check_box_outline_blank, color: Colors.black54,),
                         Text(
                           undoneTask,
                           style: TextStyle(
@@ -402,13 +402,13 @@ class QuickActionsCard extends StatelessWidget {
             height: 160,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(defaultBorderRadius),
-              border: Border.all(color: index==0?primaryColor:primaryColorDark, width: 1),
+              border: Border.all(color: index == 0 ? primaryColor : primaryColorDark, width: 1),
             ),
             padding: EdgeInsets.symmetric(vertical: 4),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, color: index==0?primaryColor:primaryColorDark, size: 35,),
+                Icon(icon, color: index == 0 ? primaryColor : primaryColorDark, size: 35,),
                 Text(
                   title,
                   style: TextStyle(

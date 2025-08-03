@@ -37,7 +37,7 @@ class PlaybookDetailScreen extends StatelessWidget {
                 children: [
                   ActivityProgressCard(),
                   QuickActionsCard(),
-                  SizedBox(height: 3*16.0),
+                  SizedBox(height: 3 * 16.0),
                 ],
               ),
             ),

@@ -44,9 +44,9 @@ class TaskViewModel extends ChangeNotifier {
 
   Task? getNextUndoneTask() {
     final undone = taskGroup.tasks
-        .where((task) => !task.done)
-        .toList()
-      ..sort((a, b) => a.taskIdx.compareTo(b.taskIdx));
+      .where((task) => !task.done)
+      .toList()
+    ..sort((a, b) => a.taskIdx.compareTo(b.taskIdx));
 
     return undone.isNotEmpty ? undone.first : null;
   }
