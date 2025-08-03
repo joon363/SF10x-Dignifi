@@ -76,7 +76,7 @@ class ActivityProgressCard extends StatelessWidget {
                     child: CircularProgressIndicator(
                       value: vm.progressRatio(),
                       strokeWidth: 4,
-                      color: primaryColor,
+                      color: secondaryColor,
                     ),
                   ),
                   Text(vm.progressPercent(),
@@ -89,7 +89,7 @@ class ActivityProgressCard extends StatelessWidget {
             children: [
               Text("Progress", style: TextStyle(color: Colors.black, fontSize: 12)),
               Text(vm.progressText(),
-                style: TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold)),
             ],
           ),
           LinearProgressIndicator(
@@ -97,7 +97,7 @@ class ActivityProgressCard extends StatelessWidget {
             value: vm.progressRatio(),
             borderRadius: BorderRadius.circular(defaultBorderRadius),
             backgroundColor: boxGrayColor,
-            color: primaryColor,
+            color: secondaryColor,
           ),
         ],
       ),
@@ -127,7 +127,7 @@ class QuickActionsCard extends StatelessWidget {
                 final step = vm.steps[i];
                 final status = vm.statusOf(i);
                 final color = step.done
-                  ? Colors.green[300]
+                  ? secondaryColor
                   : (status == "Active" ? primaryColor : Colors.grey[300]);
 
                 return InkWell(
@@ -142,7 +142,7 @@ class QuickActionsCard extends StatelessWidget {
                           onChanged: (_) {
                             vm.toggle(i);
                           },
-                          activeColor: Colors.green[300],
+                          activeColor: secondaryColor,
                         ),
                         Expanded(
                           child: Column(

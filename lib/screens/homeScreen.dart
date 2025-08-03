@@ -8,7 +8,11 @@ import 'package:reentry/viewModels/taskViewModel.dart';
 import 'package:reentry/screens/playbookDetailScreen.dart';
 import '../theme.dart';
 
-
+List<IconData> cardIcons = [
+  Icons.insert_drive_file,
+  Icons.people_alt_outlined,
+  Icons.home,
+];
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -34,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return CircularProgressIndicator();
         } else if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
-            print(snapshot.error);
             return Text('Error: ${snapshot.error}');
           } else {
             return SafeArea(
@@ -56,21 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   centerTitle: false,
                 ),
                 backgroundColor: boxGrayColor,
-                body: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        spacing: 16,
-                        children: [
-                          Container(),
-                          WelcomeCard(),
-                          PageViewCard(),
-                          QuickActionsCard(),
-                          RecentActivityCard(),
-                          SizedBox(height: 50,)
-                        ],
-                      ),
-                    ),
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(),
+                    WelcomeCard(),
+                    PageViewCard(),
+                    QuickActionsCard(),
+                    Container(),
                   ],
                 )
               ),
@@ -92,7 +88,7 @@ class WelcomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<TaskGroupViewModel>();
     return Container(
-      height: 100,
+      height: 120,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -116,7 +112,7 @@ class WelcomeCard extends StatelessWidget {
             "Welcome back, Terran!",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 23,
               fontWeight: FontWeight.bold
             ),
           ),
@@ -142,7 +138,7 @@ class WelcomeCard extends StatelessWidget {
             "Great momentum!",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 14,
             ),
           ),
         ],
@@ -170,7 +166,7 @@ class _PageViewCardState extends State<PageViewCard> {
     return Column(
       children: [
         SizedBox(
-          height: 200,
+          height: 250,
           child: PageView.builder(
             controller: _controller,
             onPageChanged: (i) => setState(() => _pageIndex = i),
@@ -183,7 +179,7 @@ class _PageViewCardState extends State<PageViewCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(3, (i) {
               return Container(
-                margin: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                margin: EdgeInsets.only(left: 4, right:4, top:12),
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
@@ -217,6 +213,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
       create: (_) => TaskViewModel(taskGroup: widget.group),
       child: Builder(builder: (context) {
           final tasksVM = context.watch<TaskViewModel>();
+          String undoneTask = tasksVM.getNextUndoneTask()?.title??'All Completed!';
           return Container(
             decoration: grayBoxDecoration,
             padding: EdgeInsets.all(16),
@@ -225,7 +222,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              spacing: 24,
+              spacing: 16,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,7 +231,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                       children: [
                         SizedBox(
                           width: 40,
-                          child: Icon(Icons.check, color: primaryColor, size: 30,),
+                          child: Icon(cardIcons[tasksVM.taskGroup.groupId], color: secondaryColor, size: 30,),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +240,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                               tasksVM.taskGroup.groupName,
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold
                               ),
                             ),
@@ -251,7 +248,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                               tasksVM.taskGroup.groupExplanation,
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 12,
+                                fontSize: 14,
                               ),
                             ),
                           ],
@@ -261,16 +258,20 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        CircularProgressIndicator(
-                          value: tasksVM.progressRatio(),
-                          strokeWidth: 4,
-                          color: primaryColor,
+                        SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            value: tasksVM.progressRatio(),
+                            strokeWidth: 4,
+                            color: secondaryColor,
+                          ),
                         ),
                         Text(
                           tasksVM.progressPercent(),
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 12,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold
                           ),
                         ),
@@ -279,6 +280,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                   ],
                 ),
                 Column(
+                  spacing: 4,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -293,9 +295,8 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                         Text(
                           tasksVM.progressText(),
                           style: TextStyle(
-                            color: primaryColor,
+                            color: Colors.black,
                             fontSize: 12,
-                            fontWeight: FontWeight.bold
                           ),
                         ),
                       ],
@@ -305,8 +306,22 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                       value: tasksVM.progressRatio(),
                       borderRadius: BorderRadius.circular(defaultBorderRadius),
                       backgroundColor: boxGrayColor,
-                      color: primaryColor,
+                      color: secondaryColor,
                     ),
+                    SizedBox(height: 10,),
+                    Row(
+                      spacing: 8,
+                      children: [
+                        Icon(undoneTask=='All Completed!'?Icons.local_fire_department_sharp:Icons.check_box_outline_blank, color: Colors.black54,),
+                        Text(
+                          undoneTask,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        )
+                      ],
+                    )
                   ],
                 ),
                 Material(
@@ -383,20 +398,23 @@ class QuickActionsCard extends StatelessWidget {
           },
           borderRadius: BorderRadius.circular(defaultBorderRadius),
           child: Container(
+            alignment: Alignment.center,
+            height: 160,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(defaultBorderRadius),
-              border: Border.all(color: primaryColor, width: 1),
+              border: Border.all(color: index==0?primaryColor:primaryColorDark, width: 1),
             ),
             padding: EdgeInsets.symmetric(vertical: 4),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, color: primaryColor, size: 35,),
+                Icon(icon, color: index==0?primaryColor:primaryColorDark, size: 35,),
                 Text(
                   title,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700
                   ),
                 ),
                 Text(
@@ -404,7 +422,7 @@ class QuickActionsCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 14,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -427,7 +445,7 @@ class QuickActionsCard extends StatelessWidget {
             "Quick Actions",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 18,
+              fontSize: 22,
               fontWeight: FontWeight.bold
             ),
           ),

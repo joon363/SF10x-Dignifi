@@ -42,6 +42,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     );
   }
 }
+
 class ChatArea extends StatefulWidget{
   const ChatArea({super.key});
 
@@ -103,7 +104,8 @@ class _ChatAreaState extends State<ChatArea> {
                       focusedBorder: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                     ),
-                  ),),
+                  ),
+                ),
                 IconButton(
                   icon: Icon(Icons.send, color: primaryColor, size: 30,),
                   onPressed: () async {

@@ -41,6 +41,15 @@ class TaskViewModel extends ChangeNotifier {
     final total = steps.length;
     return "$done/$total Steps";
   }
+
+  Task? getNextUndoneTask() {
+    final undone = taskGroup.tasks
+        .where((task) => !task.done)
+        .toList()
+      ..sort((a, b) => a.taskIdx.compareTo(b.taskIdx));
+
+    return undone.isNotEmpty ? undone.first : null;
+  }
 }
 
 class TaskGroupViewModel extends ChangeNotifier {
