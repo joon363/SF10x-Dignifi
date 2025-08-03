@@ -22,13 +22,13 @@ class TaskViewModel extends ChangeNotifier {
   double progressRatio() {
     final total = steps.length;
     final done = steps.where((e) => e.done).length;
-    return done/total;
+    return done / total;
   }
 
   String progressPercent() {
     final total = steps.length;
     final done = steps.where((e) => e.done).length;
-    return "${((done / total)*100).round()}%";
+    return "${((done / total) * 100).round()}%";
   }
 
   int doneCount() {
@@ -77,6 +77,6 @@ class TaskGroupViewModel extends ChangeNotifier {
 
   int get totalDoneSteps => _doneTasks;
   int get totalSteps => _totalTasks;
-  double get totalProgressRatio => _doneTasks/_totalTasks;
-  String get totalProgressPercent => "${((totalDoneSteps / totalSteps)*100).round()}%";
+  double get totalProgressRatio => _doneTasks / _totalTasks;
+  String get totalProgressPercent => "${((totalDoneSteps / totalSteps) * 100).round()}%";
 }

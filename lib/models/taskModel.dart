@@ -1,4 +1,3 @@
-import '../datas/taskData.dart';
 class Task {
   int taskIdx;
   String title;
@@ -17,7 +16,7 @@ class Task {
       taskIdx: json['taskidx'],
       title: json['title'],
       explanation: json['explanation'],
-      done: json['isDone']==0?false:true,
+      done: json['isDone'] == 0 ? false : true,
     );
   }
 
@@ -50,8 +49,8 @@ class TaskGroup {
       groupName: json['groupName'],
       groupExplanation: json['groupExplanation'],
       tasks: (json['tasks'] as List)
-          .map((stepJson) => Task.fromJson(stepJson))
-          .toList(),
+        .map((stepJson) => Task.fromJson(stepJson))
+        .toList(),
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:reentry/datas/taskData.dart';
 import 'package:reentry/models/taskModel.dart';
 import 'package:reentry/screens/chatbotScreen.dart';
 import 'package:reentry/viewModels/taskViewModel.dart';
@@ -29,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _future,
-      builder: (context, snapshot){
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.connectionState == ConnectionState.done) {
@@ -40,39 +39,39 @@ class _HomeScreenState extends State<HomeScreen> {
             return SafeArea(
               top: false,
               child: Scaffold(
-                  appBar: AppBar(
-                    leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
-                    title: Text(
-                      "Dignifi",
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          height: 0.1
+                appBar: AppBar(
+                  leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
+                  title: Text(
+                    "Dignifi",
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      height: 0.1
+                    ),
+                  ),
+                  titleSpacing: 0,
+                  centerTitle: false,
+                ),
+                backgroundColor: boxGrayColor,
+                body: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Column(
+                        spacing: 16,
+                        children: [
+                          Container(),
+                          WelcomeCard(),
+                          PageViewCard(),
+                          QuickActionsCard(),
+                          RecentActivityCard(),
+                          SizedBox(height: 50,)
+                        ],
                       ),
                     ),
-                    titleSpacing: 0,
-                    centerTitle: false,
-                  ),
-                  backgroundColor: boxGrayColor,
-                  body: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          spacing: 16,
-                          children: [
-                            Container(),
-                            WelcomeCard(),
-                            PageViewCard(),
-                            QuickActionsCard(),
-                            RecentActivityCard(),
-                            SizedBox(height: 50,)
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
+                  ],
+                )
               ),
             );
           }
@@ -92,61 +91,61 @@ class WelcomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<TaskGroupViewModel>();
     return Container(
-        height: 100,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              primaryColor,
-              primaryColorDark,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
+      height: 100,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            primaryColor,
+            primaryColorDark,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 4,
-          children: [
-            Text(
-              "Welcome back, Terran!",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-              ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 4,
+        children: [
+          Text(
+            "Welcome back, Terran!",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold
             ),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: LinearProgressIndicator(
+          ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(child: LinearProgressIndicator(
                   minHeight: 10,
                   value: vm.totalProgressRatio,
                   borderRadius: BorderRadius.circular(10),
                   backgroundColor: primaryColorLight,
                   color: Colors.white,
                 ),),
-                Text(
-                  vm.totalProgressPercent,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+              Text(
+                vm.totalProgressPercent,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
                 ),
-              ],),
-            Text(
-              "Great momentum!",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
               ),
+            ],),
+          Text(
+            "Great momentum!",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
             ),
-          ],
-        )
+          ),
+        ],
+      )
     );
   }
 }
@@ -318,11 +317,11 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>
-                              ChangeNotifierProvider.value(
-                                value: stepsCategoryVM, // 기존 ViewModel 인스턴스
-                                child: PlaybookDetailScreen(category: widget.group),        // PageB가 이 ViewModel을 사용할 수 있음
-                              )
+                          builder: (_) =>
+                          ChangeNotifierProvider.value(
+                            value: stepsCategoryVM, // 기존 ViewModel 인스턴스
+                            child: PlaybookDetailScreen(category: widget.group),        // PageB가 이 ViewModel을 사용할 수 있음
+                          )
                         ),
                       ).then((_) {
                             setState(() {
@@ -360,7 +359,7 @@ class QuickActionsCard extends StatelessWidget {
   const QuickActionsCard({
     super.key,
   });
-  Widget smallButton(IconData icon, String title, String subtitle, BuildContext context){
+  Widget smallButton(IconData icon, String title, String subtitle, BuildContext context, int index) {
     return Column(
       children: [
         IconButton(
@@ -375,9 +374,9 @@ class QuickActionsCard extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w500
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w500
           ),
         ),
         Text(
@@ -413,9 +412,9 @@ class QuickActionsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              smallButton(Icons.chat_bubble, "Chat with AI", "Get help with\nyour actions", context),
-              smallButton(Icons.local_activity, "Find Resources", "Locate\nnearby services", context),
-              smallButton(Icons.timer_rounded, "Set Reminders", "Stay on task\nwith tasks", context),
+              smallButton(Icons.chat_bubble, "Chat with AI", "Get help with\nyour actions", context, 0),
+              smallButton(Icons.phone, "Talk with AI", "Trouble texting?\nMake a call now.", context, 1),
+              smallButton(Icons.timer_rounded, "Set Reminders", "Stay on task\nwith tasks", context, 2),
             ],
           )
         ],
