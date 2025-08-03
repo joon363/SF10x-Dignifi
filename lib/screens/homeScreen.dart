@@ -64,7 +64,17 @@ class WelcomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 100,
-      decoration: primaryBoxDecoration,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            primaryColor,
+            primaryColorDark,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
       padding: EdgeInsets.symmetric(horizontal: 16),
       margin: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.centerLeft,
@@ -283,12 +293,10 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                           });
                     },
                     borderRadius: BorderRadius.circular(defaultBorderRadius),
-                    //highlightColor: primaryColorLight,
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(defaultBorderRadius),
-                        //color: Colors.green !DO NOT ADD COLOR TO CONTAINER
                       ),
                       alignment: Alignment.center,
                       child: Text(
@@ -315,7 +323,37 @@ class QuickActionsCard extends StatelessWidget {
   const QuickActionsCard({
     super.key,
   });
-
+  Widget smallButton(IconData icon, String title, String subtitle, BuildContext context){
+    return Column(
+      children: [
+        IconButton(
+          icon: Icon(icon, color: primaryColor, size: 30,),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => ChatbotScreen()),
+            );
+          },
+        ),
+        Text(
+          title,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w500
+          ),
+        ),
+        Text(
+          subtitle,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -338,77 +376,9 @@ class QuickActionsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.chat_bubble, color: primaryColor, size: 30,),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ChatbotScreen()),
-                      );
-                    },
-                  ),
-                  Text(
-                    "Chat with AI",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  Text(
-                    "Get help with\nyour actions",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.local_activity, color: primaryColor, size: 30,),
-                  Text(
-                    "Find Resources",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  Text(
-                    "Locate\nnearby services",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(Icons.timer_rounded, color: primaryColor, size: 30,),
-                  Text(
-                    "Set Reminders",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  Text(
-                    "Stay on task\nwith tasks",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              )
+              smallButton(Icons.chat_bubble, "Chat with AI", "Get help with\nyour actions", context),
+              smallButton(Icons.local_activity, "Find Resources", "Locate\nnearby services", context),
+              smallButton(Icons.timer_rounded, "Set Reminders", "Stay on task\nwith tasks", context),
             ],
           )
         ],
