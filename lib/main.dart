@@ -3,8 +3,12 @@ import 'package:provider/provider.dart';
 import 'theme.dart';
 import 'screens/homeScreen.dart';
 import '/viewModels/taskViewModel.dart';
+import 'package:vapi/vapi.dart';
 
-void main() => runApp(MyApp());
+void main() async{
+  await VapiClient.platformInitialized.future;
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

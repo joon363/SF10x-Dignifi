@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:reentry/models/taskModel.dart';
 import 'package:reentry/screens/chatbotScreen.dart';
+import 'package:reentry/screens/phoneCallScreen.dart';
 import 'package:reentry/viewModels/taskViewModel.dart';
 import 'package:reentry/screens/playbookDetailScreen.dart';
 import '../theme.dart';
@@ -365,10 +366,17 @@ class QuickActionsCard extends StatelessWidget {
         IconButton(
           icon: Icon(icon, color: primaryColor, size: 30,),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => ChatbotScreen()),
-            );
+            if(index==0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ChatbotScreen()),
+              );
+            } else if (index==1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => PhoneCallScreen()),
+              );
+            }
           },
         ),
         Text(
