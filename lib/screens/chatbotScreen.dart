@@ -3,8 +3,8 @@ import 'package:reentry/theme.dart';
 import 'package:reentry/models/chatModel.dart';
 import 'package:reentry/viewModels/chatViewModel.dart';
 import 'package:provider/provider.dart';
-import 'package:reentry/connections/apiCalls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'dart:math' as math;
 
 
@@ -83,10 +83,10 @@ class _ChatAreaState extends State<ChatArea> {
           ),
 
         Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 10),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 0),
           child: Container(
             height: 150,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             decoration: grayBoxDecoration,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,8 +99,8 @@ class _ChatAreaState extends State<ChatArea> {
                     decoration: const InputDecoration(
                       hintText: '"What should I do next?"',
                       hintStyle: TextStyle(color: Colors.grey),
-                      border: InputBorder.none,         // 밑줄 제거!
-                      focusedBorder: InputBorder.none,  // 포커스됐을 때도 밑줄 제거
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                     ),
                   ),),
@@ -108,9 +108,9 @@ class _ChatAreaState extends State<ChatArea> {
                   icon: Icon(Icons.send, color: primaryColor, size: 30,),
                   onPressed: () async {
                     final userText = _controller.text.trim();
+                    FocusScope.of(context).unfocus();
                     if (userText.isEmpty) return;
                     _controller.clear();
-                    FocusScope.of(context).unfocus();
 
                     vm.updateUserMessage(userText);
 
@@ -175,79 +175,65 @@ Widget buildMessage(ChatMessage message) {
   final crossAlignment = isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;
   final textColor = isUser ? Colors.white : Colors.black87;
 
+  Widget botLogo() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: SvgPicture.asset(width: 30, height: 30, 'assets/images/logo.svg'),
+    );
+  }
+
+  Widget spinningImage() {
+    return Row(
+      spacing: 10,
+      children: [
+        SizedBox(width: 10,),
+        SpinningImage(
+          imagePath: 'assets/images/loading.png',
+        ),
+        Text(
+          message.loadingMessage,
+          style: TextStyle(
+            fontSize: 16,
+            color: textGrayColor
+          ),
+        )
+      ],
+    );
+  }
+  Widget messageBox(bool isUser) {
+    if (isUser) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: primaryBoxDecoration,
+        child: Text(
+          message.text,
+          style: TextStyle(
+            fontSize: 16,
+            color: textColor,
+            fontWeight: FontWeight.w500
+          ),
+        )
+      );
+    } else {
+      return Markdown(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        data: message.text,
+        styleSheet: MarkdownStyleSheet(
+          p: TextStyle(fontSize: 16)
+        )
+      );
+    }
+  }
   return Align(
     alignment: alignment,
     child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Column(
         crossAxisAlignment: crossAlignment,
-        spacing: 8,
         children: [
-          if(!message.isUser)Container(
-            width: 30,
-            height: 30,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')
-          ),
-          message.isLoading ?
-            Row(
-              spacing: 10,
-              children: [
-                SizedBox(width: 10,),
-                SpinningImage(
-                  imagePath: 'assets/images/loading.png',
-                ),
-                Text(
-                  message.loadingMessage,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: textGrayColor
-                  ),
-                )
-              ],
-            ) :
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: crossAlignment,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  decoration: message.isUser ? BoxDecoration(
-                      color: primaryColor,
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ) : BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                  child: Text(
-                    message.text ?? '',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: textColor,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                ),
-              ],
-            )
+          if(!message.isUser) botLogo(),
+          message.isLoading ? spinningImage() : messageBox(isUser),
         ],
       ),
     )
@@ -279,7 +265,7 @@ class _SpinningImageState extends State<SpinningImage>
     _controller = AnimationController(
       vsync: this,
       duration: widget.duration,
-    )..repeat(); // 무한 회전
+    )..repeat();
     super.initState();
   }
 
