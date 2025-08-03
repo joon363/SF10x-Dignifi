@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:reentry/datas/stepsData.dart';
+import 'package:reentry/models/stepsModel.dart';
+import 'package:reentry/screens/chatbotScreen.dart';
+import 'package:reentry/viewModels/stepsViewModel.dart';
+import 'package:reentry/screens/playbookDetailScreen.dart';
 import '../theme.dart';
 
 
@@ -8,36 +14,43 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: SizedBox(
-          width: 100,
-          height: 50,
-          child: SvgPicture.asset('assets/your_icon.svg'),
-        ),
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        surfaceTintColor: Colors.transparent,
-      ),
-      backgroundColor: boxGrayColor,
-      body: Padding(
-        padding: EdgeInsets.only(top: 8),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                spacing: 16,
-                children: [
-                  WelcomeCard(),
-                  PageViewCard(),
-                  QuickActionsCard(),
-                  RecentActivityCard(),
-                  SizedBox(height: 50,)
-                ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+          appBar: AppBar(
+            leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
+            title: Text(
+              "Dignifi",
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  height: 0.1
               ),
             ),
-          ],
-        ),)
+            titleSpacing: 0,
+            centerTitle: false,
+          ),
+          backgroundColor: boxGrayColor,
+          body: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  spacing: 16,
+                  children: [
+                    Container(),
+                    WelcomeCard(),
+                    PageViewCard(),
+                    QuickActionsCard(),
+                    RecentActivityCard(),
+                    SizedBox(height: 50,)
+                  ],
+                ),
+              ),
+            ],
+          )
+      ),
     );
   }
 }
@@ -50,55 +63,51 @@ class WelcomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 100,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(defaultBorderRadius),
-            color: primaryColor
-          //border: Border.all(color: primaryColor, width: 2),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 4,
-          children: [
-            Text(
-              "Welcome back, Terran!",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-              ),
+      height: 100,
+      decoration: primaryBoxDecoration,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 4,
+        children: [
+          Text(
+            "Welcome back, Terran!",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold
             ),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: LinearProgressIndicator(
+          ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(child: LinearProgressIndicator(
                   minHeight: 10,
                   value: 0.2,
                   borderRadius: BorderRadius.circular(10),
                   backgroundColor: primaryColorLight,
                   color: Colors.white,
                 ),),
-                Text(
-                  "20%",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+              Text(
+                "20%",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
                 ),
-              ],),
-            Text(
-              "Great momentum!",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
               ),
+            ],),
+          Text(
+            "Great momentum!",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
             ),
-          ],
-        )
+          ),
+        ],
+      )
     );
   }
 }
@@ -127,7 +136,7 @@ class _PageViewCardState extends State<PageViewCard> {
             onPageChanged: (i) => setState(() => _pageIndex = i),
             itemCount: 3,
             scrollDirection: Axis.horizontal,
-            itemBuilder: (_, i) => ActivityProgressCard(),
+            itemBuilder: (_, i) => ActivityProgressCard(category: categories[i]),
           ),
         ),
         Row(
@@ -149,139 +158,155 @@ class _PageViewCardState extends State<PageViewCard> {
   }
 }
 
-class ActivityProgressCard extends StatelessWidget {
+class ActivityProgressCard extends StatefulWidget {
+  final StepCategory category;
   const ActivityProgressCard({
     super.key,
+    required this.category
   });
 
   @override
+  State<ActivityProgressCard> createState() => _ActivityProgressCardState();
+}
+
+class _ActivityProgressCardState extends State<ActivityProgressCard> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(defaultBorderRadius),
-          color: Colors.white,
-          border: Border.all(color: dividerNormal, width: 1),
-        ),
-        padding: EdgeInsets.all(16),
-        margin: EdgeInsets.only(right: 8),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          spacing: 24,
-          children: [
-            Row(
+    return ChangeNotifierProvider(
+      create: (_) => StepsViewModel(category: widget.category),
+      child: Builder(builder: (context) {
+          final vm = context.watch<StepsViewModel>();
+          return Container(
+            decoration: grayBoxDecoration,
+            padding: EdgeInsets.all(16),
+            margin: EdgeInsets.only(right: 8),
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              spacing: 24,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 40,
-                      child: Icon(Icons.check, color: primaryColor, size: 30,),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        Text(
-                          "IDs & Benefits",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                          ),
+                        SizedBox(
+                          width: 40,
+                          child: Icon(Icons.check, color: primaryColor, size: 30,),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              Provider.of<StepsViewModel>(context).category.title,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Text(
+                              Provider.of<StepsViewModel>(context).category.subtitle,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          value: vm.progressPercent(),
+                          strokeWidth: 4,
+                          color: primaryColor,
                         ),
                         Text(
-                          "Essential Documentation",
+                          "${(vm.progressPercent() * 100).round()}%",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 12,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                Stack(
-                  alignment: Alignment.center,
+                Column(
                   children: [
-                    CircularProgressIndicator(
-                      value: 0.7,
-                      strokeWidth: 4,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Progress",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          vm.progressText(),
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
+                    ),
+                    LinearProgressIndicator(
+                      minHeight: 10,
+                      value: vm.progressPercent(),
+                      borderRadius: BorderRadius.circular(10),
+                      backgroundColor: boxGrayColor,
                       color: primaryColor,
                     ),
-                    Text(
-                      "70%",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
                   ],
                 ),
-              ],
-            ),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Progress",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Text(
-                      "6/8 Steps",
-                      style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ],
-                ),
-                LinearProgressIndicator(
-                  minHeight: 10,
-                  value: 0.2,
-                  borderRadius: BorderRadius.circular(10),
-                  backgroundColor: boxGrayColor,
+                Material(
                   color: primaryColor,
-                ),
-              ],
-            ),
-            Material(
-              color: primaryColor,
-              borderRadius: BorderRadius.circular(defaultBorderRadius),
-              elevation: 5,
-              child: InkWell(
-                onTap: () {
-                  // Action
-                },
-                borderRadius: BorderRadius.circular(defaultBorderRadius),
-                //highlightColor: primaryColorLight,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(defaultBorderRadius),
+                  elevation: 5,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => PlaybookDetailScreen(category: widget.category,)),
+                      ).then((_) {
+                            setState(() {
+                              });
+                          });
+                    },
                     borderRadius: BorderRadius.circular(defaultBorderRadius),
-                    //color: Colors.green !DO NOT ADD COLOR TO CONTAINER
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Continue Playbook",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
+                    //highlightColor: primaryColorLight,
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(defaultBorderRadius),
+                        //color: Colors.green !DO NOT ADD COLOR TO CONTAINER
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Continue Playbook",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                )
+              ],
             )
-          ],
-        )
+          );
+        }
+      )
     );
   }
 }
@@ -294,96 +319,100 @@ class QuickActionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(defaultBorderRadius),
-          color: Colors.white,
-          border: Border.all(color: dividerNormal, width: 1),
-        ),
-        padding: EdgeInsets.all(16),
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 24,
-          children: [
-            Text(
-              "Quick Actions",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-              ),
+      decoration: grayBoxDecoration,
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 24,
+        children: [
+          Text(
+            "Quick Actions",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Icon(Icons.chat_bubble, color: primaryColor, size: 30,),
-                    Text(
-                      "Chat with AI",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500
-                      ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.chat_bubble, color: primaryColor, size: 30,),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ChatbotScreen()),
+                      );
+                    },
+                  ),
+                  Text(
+                    "Chat with AI",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500
                     ),
-                    Text(
-                      "Get help with\nyour actions",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
+                  ),
+                  Text(
+                    "Get help with\nyour actions",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
                     ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Icon(Icons.local_activity, color: primaryColor, size: 30,),
-                    Text(
-                      "Find Resources",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500
-                      ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(Icons.local_activity, color: primaryColor, size: 30,),
+                  Text(
+                    "Find Resources",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500
                     ),
-                    Text(
-                      "Locate\nnearby services",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
+                  ),
+                  Text(
+                    "Locate\nnearby services",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
                     ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Icon(Icons.timer_rounded, color: primaryColor, size: 30,),
-                    Text(
-                      "Set Reminders",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500
-                      ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(Icons.timer_rounded, color: primaryColor, size: 30,),
+                  Text(
+                    "Set Reminders",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500
                     ),
-                    Text(
-                      "Stay on task\nwith tasks",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
+                  ),
+                  Text(
+                    "Stay on task\nwith tasks",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
                     ),
-                  ],
-                )
-              ],
-            )
-          ],
-        )
+                  ),
+                ],
+              )
+            ],
+          )
+        ],
+      )
     );
   }
 }
@@ -396,11 +425,7 @@ class RecentActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(defaultBorderRadius),
-        color: Colors.white,
-        border: Border.all(color: dividerNormal, width: 1),
-      ),
+      decoration: grayBoxDecoration,
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.centerLeft,
