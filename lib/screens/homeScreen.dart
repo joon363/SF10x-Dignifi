@@ -395,9 +395,9 @@ class QuickActionsCard extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500
                   ),
                 ),
                 Text(

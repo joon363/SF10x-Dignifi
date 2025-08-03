@@ -184,8 +184,8 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
                       child: Text(
                         buttonText,
                         style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
                         ),
                       ),
                     ),
@@ -220,8 +220,8 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
                               });
                             },
                             child: const Text('Send Message', style: TextStyle(
-                              fontSize: 18,
-                            ),),
+                                fontSize: 18,
+                              ),),
                           ),
                         ],
                       ),
