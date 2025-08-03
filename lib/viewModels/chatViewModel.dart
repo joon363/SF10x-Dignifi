@@ -17,7 +17,7 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
 
     final result = await callAPI(userText);
-    _messages.removeWhere((m) => m.isLoading); // 로딩 메시지 제거
+    _messages.removeWhere((m) => m.isLoading);
     if (result == null) {
       _messages.add(ChatMessage(
           text: 'Something Went Wrong. Try again Later',

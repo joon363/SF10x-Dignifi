@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ProjectName',
+      title: 'Dignifi',
       theme: AppTheme.lightTheme(context),
       home: HomeScreen(),
     );
