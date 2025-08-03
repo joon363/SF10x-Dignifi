@@ -159,7 +159,7 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
                           highlightColor: Colors.transparent,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(defaultBorderRadius),
                         ),
                       ),
                     ),

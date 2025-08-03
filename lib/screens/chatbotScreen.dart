@@ -190,13 +190,6 @@ Widget buildMessage(ChatMessage message) {
         SpinningImage(
           imagePath: 'assets/images/loading.png',
         ),
-        Text(
-          message.loadingMessage,
-          style: TextStyle(
-            fontSize: 16,
-            color: textGrayColor
-          ),
-        )
       ],
     );
   }

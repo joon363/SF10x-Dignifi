@@ -102,7 +102,7 @@ class WelcomeCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(defaultBorderRadius),
       ),
       padding: EdgeInsets.symmetric(horizontal: 16),
       margin: EdgeInsets.symmetric(horizontal: 16),
@@ -126,7 +126,7 @@ class WelcomeCard extends StatelessWidget {
               Expanded(child: LinearProgressIndicator(
                   minHeight: 10,
                   value: vm.totalProgressRatio,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(defaultBorderRadius),
                   backgroundColor: primaryColorLight,
                   color: Colors.white,
                 ),),
@@ -303,7 +303,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                     LinearProgressIndicator(
                       minHeight: 10,
                       value: tasksVM.progressRatio(),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(defaultBorderRadius),
                       backgroundColor: boxGrayColor,
                       color: primaryColor,
                     ),

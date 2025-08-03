@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'theme.dart';
 import 'screens/homeScreen.dart';
-import '/viewModels/taskViewModel.dart';
+import 'viewModels/taskViewModel.dart';
 import 'package:vapi/vapi.dart';
 
 void main() async{

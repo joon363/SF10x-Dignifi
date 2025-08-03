@@ -37,7 +37,7 @@ class PlaybookDetailScreen extends StatelessWidget {
                 children: [
                   ActivityProgressCard(),
                   QuickActionsCard(),
-                  SizedBox(height: 50),
+                  SizedBox(height: 3*16.0),
                 ],
               ),
             ),
@@ -56,8 +56,8 @@ class ActivityProgressCard extends StatelessWidget {
     final vm = context.watch<TaskViewModel>();
 
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.all(16.0),
+      margin: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -95,7 +95,7 @@ class ActivityProgressCard extends StatelessWidget {
           LinearProgressIndicator(
             minHeight: 10,
             value: vm.progressRatio(),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(defaultBorderRadius),
             backgroundColor: boxGrayColor,
             color: primaryColor,
           ),
@@ -157,7 +157,7 @@ class QuickActionsCard extends StatelessWidget {
                                 margin: EdgeInsets.only(top: 4),
                                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: color, borderRadius: BorderRadius.circular(20)),
+                                  color: color, borderRadius: BorderRadius.circular(defaultBorderRadius)),
                                 child: Text(status, style: TextStyle(fontSize: 12, color: status == "Active" ? Colors.white : Colors.black)),
                               )
                             ],
