@@ -24,7 +24,7 @@ class PlaybookDetailScreen extends StatelessWidget {
               },
             ),
             title: Text("Playbook Detail",
-                style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
             centerTitle: true,
           ),
           backgroundColor: Colors.white,

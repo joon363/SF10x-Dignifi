@@ -5,7 +5,7 @@ final StepCategory idsAndBenefits = StepCategory(
   subtitle: 'Essential Documentation',
   steps: [
     StepItem(title: 'Gather required documents', subtitle: 'Birth certificate, Social Security card, proof of address', done: false),
-    StepItem(title: 'Visit DMV for state ID', subtitle: 'Bring all documents and application fee', done :false),
+    StepItem(title: 'Visit DMV for state ID', subtitle: 'Bring all documents and application fee', done: false),
     StepItem(title: 'Apply for SNAP benefits', subtitle: 'Visit local SNAP office or apply online', done: false),
     StepItem(title: 'Apply for Medicaid', subtitle: 'Health insurance through state program', done: false),
   ],

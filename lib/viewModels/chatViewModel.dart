@@ -24,7 +24,7 @@ class ChatViewModel extends ChangeNotifier {
           isEnded: true)
       );
     }
-    else{
+    else {
       _messages.add(ChatMessage(text: result, isUser: false));
     }
 

@@ -11,18 +11,18 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final List<Map<String, dynamic>> dummyData = [
-    {
-      'title': "Data1",
-      'data': "information 1"
-    },
-    {
-      'title': "Data2",
-      'data': "information 2"
-    },
-    {
-      'title': "Data3",
-      'data': "information 3"
-    },
+  {
+    'title': "Data1",
+    'data': "information 1"
+  },
+  {
+    'title': "Data2",
+    'data': "information 2"
+  },
+  {
+    'title': "Data3",
+    'data': "information 3"
+  },
   ];
 
   final ScrollController _scrollController = ScrollController();
@@ -91,7 +91,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: defaultPadding*2),
+                        margin: EdgeInsets.only(bottom: defaultPadding * 2),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -218,19 +218,19 @@ class _MainPageState extends State<MainPage> {
                         itemBuilder: (ctx, i) {
                           final item = dummyData[i];
                           return Container(
-                              padding: EdgeInsets.all(4),
-                              margin: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(defaultBorderRadius),
-                                border: Border.all(color: primaryColor, width: 2),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(item['title'], style: TextStyle(fontSize: 16),),
-                                  Text(item['data'], style: TextStyle(fontSize: 12),),
-                                ],
-                              )
+                            padding: EdgeInsets.all(4),
+                            margin: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(defaultBorderRadius),
+                              border: Border.all(color: primaryColor, width: 2),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(item['title'], style: TextStyle(fontSize: 16),),
+                                Text(item['data'], style: TextStyle(fontSize: 12),),
+                              ],
+                            )
                           );
                         },
                       ),
@@ -241,22 +241,22 @@ class _MainPageState extends State<MainPage> {
               ),
               Expanded(
                 child: Column(
-                children: [
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(defaultBorderRadius),
-                      border: Border.all(color: primaryColor, width: 2),
-                    ),
-                    child: Scrollbar(
-                      controller: _scrollController2,
-                      thumbVisibility: true,
-                      child: ListView.builder(
+                  children: [
+                    Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(defaultBorderRadius),
+                        border: Border.all(color: primaryColor, width: 2),
+                      ),
+                      child: Scrollbar(
                         controller: _scrollController2,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (ctx, i) {
-                          return Container(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          controller: _scrollController2,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (ctx, i) {
+                            return Container(
                               padding: EdgeInsets.all(4),
                               margin: EdgeInsets.all(4),
                               decoration: BoxDecoration(
@@ -266,18 +266,18 @@ class _MainPageState extends State<MainPage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text('Data ${i+1}', style: TextStyle(fontSize: 16),),
-                                  Text('Information ${i+1}', style: TextStyle(fontSize: 12),),
+                                  Text('Data ${i + 1}', style: TextStyle(fontSize: 16),),
+                                  Text('Information ${i + 1}', style: TextStyle(fontSize: 12),),
                                 ],
                               )
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  Text("Expanded Listview")
-                ],
-              )
+                    Text("Expanded Listview")
+                  ],
+                )
               )
 
             ],

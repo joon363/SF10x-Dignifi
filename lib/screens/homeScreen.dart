@@ -17,39 +17,39 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Scaffold(
-          appBar: AppBar(
-            leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
-            title: Text(
-              "Dignifi",
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  height: 0.1
+        appBar: AppBar(
+          leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
+          title: Text(
+            "Dignifi",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              height: 0.1
+            ),
+          ),
+          titleSpacing: 0,
+          centerTitle: false,
+        ),
+        backgroundColor: boxGrayColor,
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                spacing: 16,
+                children: [
+                  Container(),
+                  WelcomeCard(),
+                  PageViewCard(),
+                  QuickActionsCard(),
+                  RecentActivityCard(),
+                  SizedBox(height: 50,)
+                ],
               ),
             ),
-            titleSpacing: 0,
-            centerTitle: false,
-          ),
-          backgroundColor: boxGrayColor,
-          body: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  spacing: 16,
-                  children: [
-                    Container(),
-                    WelcomeCard(),
-                    PageViewCard(),
-                    QuickActionsCard(),
-                    RecentActivityCard(),
-                    SizedBox(height: 50,)
-                  ],
-                ),
-              ),
-            ],
-          )
+          ],
+        )
       ),
     );
   }
