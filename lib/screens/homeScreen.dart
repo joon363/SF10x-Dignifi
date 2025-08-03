@@ -320,8 +320,8 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                         MaterialPageRoute(
                           builder: (_) =>
                           ChangeNotifierProvider.value(
-                            value: stepsCategoryVM, // 기존 ViewModel 인스턴스
-                            child: PlaybookDetailScreen(category: widget.group),        // PageB가 이 ViewModel을 사용할 수 있음
+                            value: stepsCategoryVM,
+                            child: PlaybookDetailScreen(category: widget.group),
                           )
                         ),
                       ).then((_) {
@@ -382,7 +382,6 @@ class QuickActionsCard extends StatelessWidget {
             }
           },
           borderRadius: BorderRadius.circular(defaultBorderRadius),
-          //highlightColor: Colors.red,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(defaultBorderRadius),
@@ -418,8 +417,6 @@ class QuickActionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //decoration: grayBoxDecoration,
-      //padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.centerLeft,
       child: Column(

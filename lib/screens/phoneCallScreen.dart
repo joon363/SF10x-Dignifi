@@ -56,19 +56,15 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
       });
 
     try {
-      // Initialize client if not already done
-      // The factory automatically selects the appropriate platform implementation
       vapiClient ??= VapiClient("d2a6dd5e-35c7-4607-84c2-50c9c1713cdc");
 
       if (!isCallStarted) {
-        // Start a new call using assistant ID
         final call = await vapiClient!
           .start(assistantId: "336aed3a-fd7d-497a-a2de-a8e7b0c8c48b");
 
         currentCall = call;
         call.onEvent.listen(_handleCallEvents);
       } else {
-        // End the current call
         await currentCall?.stop();
       }
     } catch (e) {
@@ -78,7 +74,6 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
           isLoading = false;
         });
 
-      // Show error dialog
       if (mounted) {
         showDialog(
           context: context,
@@ -165,9 +160,6 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
                           focusColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
-                          onTap: () {
-                            // Action
-                          },
                         ),
                       ),
                     ),
@@ -201,7 +193,7 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
                               final isMuted = currentCall!.isMuted;
                               currentCall!.setMuted(!isMuted);
                               setState(() {
-                                }); // Refresh to update mute status
+                                });
                             },
                             child: Text(currentCall!.isMuted ? 'Unmute' : 'Mute',
                               style: TextStyle(

@@ -5,7 +5,6 @@ import 'package:reentry/models/taskModel.dart';
 import 'config.dart';
 
 Future<List<TaskGroup>> getGroupsData() async{
-  //return categoriesData;
   final List<dynamic> data = jsonDecode(dummyStepsResponseJson);
   List<TaskGroup> groups =
     data.map((e) => TaskGroup.fromJson(e)).toList();
@@ -14,8 +13,6 @@ Future<List<TaskGroup>> getGroupsData() async{
 
 Future<String?> sendChatbotRequestAPI(String message) async {
   final url = Uri.parse(SERVER_ADDR);
-  // await Future.delayed(Duration(seconds: 1));
-  // return dummyResponse;
   final payload = {
     "input_value": message,
     "output_type": "chat",

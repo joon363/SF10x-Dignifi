@@ -28,7 +28,7 @@ class AppTheme {
         overlayColor: WidgetStateProperty.resolveWith<Color?>(
           (states) {
             if (states.contains(WidgetState.pressed)) {
-              return primaryColorLight; // 누르고 있을 때 색
+              return primaryColorLight;
             }
             return null;
           },
@@ -36,9 +36,9 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,                       // default bg
-          foregroundColor: primaryColor,                        // text / icon color
-          side: const BorderSide(color: primaryColor, width: 2),           // border
+          backgroundColor: Colors.white,
+          foregroundColor: primaryColor,
+          side: const BorderSide(color: primaryColor, width: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
