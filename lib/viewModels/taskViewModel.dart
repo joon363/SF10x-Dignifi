@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/taskModel.dart';
 import '../connections/apiCalls.dart';
 
-class TaskViewModel extends ChangeNotifier {
+class aTaskViewModel extends ChangeNotifier {
   final TaskGroup taskGroup;
 
-  TaskViewModel({required this.taskGroup});
+  aTaskViewModel({required this.taskGroup});
 
   List<Task> get steps => taskGroup.tasks;
 
@@ -53,39 +53,76 @@ class TaskViewModel extends ChangeNotifier {
 }
 
 class TaskGroupViewModel extends ChangeNotifier {
-  late List<TaskGroup> groups;
 
-  int _doneTasks = 0;
-  int _totalTasks = 0;
+  final List<TaskGroup> groups;
+  TaskGroupViewModel({required this.groups});
 
-  Future<void> fetch() async {
-    final res = await getGroupsData();
-    await setData(res);
-  }
-  Future<void> setData(List<TaskGroup> newGroups) async {
-    groups = newGroups;
-    await _recalculate();
-  }
-
-  Future<void> _recalculate() async {
-    _doneTasks = 0;
-    _totalTasks = 0;
-
+  int get totalDoneSteps {
+    int count = 0;
     for (var category in groups) {
       for (var step in category.tasks) {
-        _totalTasks++;
-        if (step.done) _doneTasks++;
+        if (step.done) count++;
       }
     }
+    return count;
   }
 
-  void update() {
-    _recalculate();
+  int get totalSteps {
+    int count = 0;
+    for (var category in groups) {
+      count += category.tasks.length;
+    }
+    return count;
+  }
+
+  double get totalProgressRatio => totalDoneSteps / totalSteps;
+
+  String get totalProgressPercent =>
+      "${(totalProgressRatio * 100).round()}%";
+
+  List<Task> steps(TaskGroup taskGroup){
+    return taskGroup.tasks;
+  }
+
+  void toggle(int index, TaskGroup taskGroup) {
+    steps(taskGroup)[index].done = !steps(taskGroup)[index].done;
     notifyListeners();
   }
 
-  int get totalDoneSteps => _doneTasks;
-  int get totalSteps => _totalTasks;
-  double get totalProgressRatio => _doneTasks / _totalTasks;
-  String get totalProgressPercent => "${((totalDoneSteps / totalSteps) * 100).round()}%";
+  String statusOf(int index, TaskGroup taskGroup) {
+    if (steps(taskGroup)[index].done) return "Done";
+    final firstUndone = steps(taskGroup).indexWhere((e) => !e.done);
+    return (index == firstUndone) ? "Active" : "Pending";
+  }
+  double progressRatio(TaskGroup taskGroup) {
+    final total = steps(taskGroup).length;
+    final done = steps(taskGroup).where((e) => e.done).length;
+    return done / total;
+  }
+
+  String progressPercent(TaskGroup taskGroup) {
+    final total = steps(taskGroup).length;
+    final done = steps(taskGroup).where((e) => e.done).length;
+    return "${((done / total) * 100).round()}%";
+  }
+
+  int doneCount(TaskGroup taskGroup) {
+    final done = steps(taskGroup).where((e) => e.done).length;
+    return done;
+  }
+
+  String progressText(TaskGroup taskGroup) {
+    final done = steps(taskGroup).where((e) => e.done).length;
+    final total = steps(taskGroup).length;
+    return "$done/$total Steps";
+  }
+
+  Task? getNextUndoneTask(TaskGroup taskGroup) {
+    final undone = taskGroup.tasks
+        .where((task) => !task.done)
+        .toList()
+      ..sort((a, b) => a.taskIdx.compareTo(b.taskIdx));
+
+    return undone.isNotEmpty ? undone.first : null;
+  }
 }

@@ -4,7 +4,7 @@ import 'package:reentry/datas/taskData.dart';
 import 'package:reentry/models/taskModel.dart';
 import 'config.dart';
 
-Future<List<TaskGroup>> getGroupsData() async{
+List<TaskGroup> getGroupsData() {
   final List<dynamic> data = jsonDecode(dummyStepsResponseJson);
   List<TaskGroup> groups =
     data.map((e) => TaskGroup.fromJson(e)).toList();

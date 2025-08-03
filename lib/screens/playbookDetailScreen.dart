@@ -5,41 +5,36 @@ import '../models/taskModel.dart';
 import '../theme.dart';
 
 class PlaybookDetailScreen extends StatelessWidget {
-  final TaskGroup category;
-  const PlaybookDetailScreen({super.key, required this.category});
+  final TaskGroup group;
+  const PlaybookDetailScreen({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {
-    final taskGroupVM = context.watch<TaskGroupViewModel>();
-    return ChangeNotifierProvider(
-      create: (_) => TaskViewModel(taskGroup: category),
-      child: SafeArea(
-        top: false,
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                taskGroupVM.update();
-                Navigator.of(context).pop();
-              },
-            ),
-            title: Text("Playbook Detail",
-              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
-            centerTitle: true,
+    return  SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          backgroundColor: Colors.white,
-          body: Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ActivityProgressCard(),
-                  QuickActionsCard(),
-                  SizedBox(height: 3 * 16.0),
-                ],
-              ),
+          title: Text("Playbook Detail",
+              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+        ),
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: EdgeInsets.only(top: 8),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ActivityProgressCard(group: group,),
+                QuickActionsCard(group: group),
+                SizedBox(height: 3 * 16.0),
+              ],
             ),
           ),
         ),
@@ -49,11 +44,12 @@ class PlaybookDetailScreen extends StatelessWidget {
 }
 
 class ActivityProgressCard extends StatelessWidget {
-  const ActivityProgressCard({super.key});
+  final TaskGroup group;
+  const ActivityProgressCard({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<TaskViewModel>();
+    final vm = context.watch<TaskGroupViewModel>();
 
     return Container(
       padding: EdgeInsets.all(16.0),
@@ -64,9 +60,9 @@ class ActivityProgressCard extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(vm.taskGroup.groupName,
+                      Text(group.groupName,
                         style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold)),
-                      Text(vm.taskGroup.groupExplanation, style: TextStyle(color: Colors.black, fontSize: 14)),
+                      Text(group.groupExplanation, style: TextStyle(color: Colors.black, fontSize: 14)),
                     ]),
                 ]),
               Stack(alignment: Alignment.center, children: [
@@ -74,12 +70,12 @@ class ActivityProgressCard extends StatelessWidget {
                     height: 50,
                     width: 50,
                     child: CircularProgressIndicator(
-                      value: vm.progressRatio(),
+                      value: vm.progressRatio(group),
                       strokeWidth: 4,
                       color: secondaryColor,
                     ),
                   ),
-                  Text(vm.progressPercent(),
+                  Text(vm.progressPercent(group),
                     style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
                 ]),
             ]),
@@ -88,13 +84,13 @@ class ActivityProgressCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Progress", style: TextStyle(color: Colors.black, fontSize: 12)),
-              Text(vm.progressText(),
+              Text(vm.progressText(group),
                 style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold)),
             ],
           ),
           LinearProgressIndicator(
             minHeight: 10,
-            value: vm.progressRatio(),
+            value: vm.progressRatio(group),
             borderRadius: BorderRadius.circular(defaultBorderRadius),
             backgroundColor: boxGrayColor,
             color: secondaryColor,
@@ -106,11 +102,12 @@ class ActivityProgressCard extends StatelessWidget {
 }
 
 class QuickActionsCard extends StatelessWidget {
-  const QuickActionsCard({super.key});
+  final TaskGroup group;
+  const QuickActionsCard({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<TaskViewModel>();
+    final vm = context.watch<TaskGroupViewModel>();
 
     return Container(
       decoration: grayBoxDecoration,
@@ -123,15 +120,15 @@ class QuickActionsCard extends StatelessWidget {
             style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(vm.steps.length, (i) {
-                final step = vm.steps[i];
-                final status = vm.statusOf(i);
+            children: List.generate(group.tasks.length, (i) {
+                final step = group.tasks[i];
+                final status = vm.statusOf(i, group);
                 final color = step.done
                   ? secondaryColor
                   : (status == "Active" ? primaryColor : Colors.grey[300]);
 
                 return InkWell(
-                  onTap: () => vm.toggle(i),
+                  onTap: () => vm.toggle(i, group),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
@@ -140,7 +137,7 @@ class QuickActionsCard extends StatelessWidget {
                         Checkbox(
                           value: step.done,
                           onChanged: (_) {
-                            vm.toggle(i);
+                            vm.toggle(i, group);
                           },
                           activeColor: secondaryColor,
                         ),

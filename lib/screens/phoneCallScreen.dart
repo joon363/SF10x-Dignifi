@@ -33,7 +33,7 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
           isLoading = false;
           isCallStarted = true;
         });
-      debugPrint('call started');
+      //debugPrint('call started');
     }
     if (event.label == "call-end") {
       setState(() {
@@ -42,10 +42,10 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
           isCallStarted = false;
           currentCall = null;
         });
-      debugPrint('call ended');
+      //debugPrint('call ended');
     }
     if (event.label == "message") {
-      debugPrint('Message: ${event.value}');
+      //debugPrint('Message: ${event.value}');
     }
   }
 
@@ -68,7 +68,7 @@ class _PhoneCallScreenState extends State<PhoneCallScreen> {
         await currentCall?.stop();
       }
     } catch (e) {
-      debugPrint('Error: $e');
+      //debugPrint('Error: $e');
       setState(() {
           buttonText = 'Start Call';
           isLoading = false;

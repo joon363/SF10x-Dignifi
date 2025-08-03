@@ -4,6 +4,7 @@ import 'theme.dart';
 import 'screens/homeScreen.dart';
 import 'viewModels/taskViewModel.dart';
 import 'package:vapi/vapi.dart';
+import '../connections/apiCalls.dart';
 
 void main() async{
   await VapiClient.platformInitialized.future;
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => TaskGroupViewModel(),
+      create: (_) => TaskGroupViewModel(groups:getGroupsData()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Dignifi',

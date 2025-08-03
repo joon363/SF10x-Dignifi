@@ -21,60 +21,39 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<void> _future;
-
-  @override
-  void initState() {
-    super.initState();
-    _future = context.read<TaskGroupViewModel>().fetch();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return SafeArea(
-              top: false,
-              child: Scaffold(
-                appBar: AppBar(
-                  leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
-                  title: Text(
-                    "Dignifi",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      height: 0.1
-                    ),
-                  ),
-                  titleSpacing: 0,
-                  centerTitle: false,
-                ),
-                backgroundColor: boxGrayColor,
-                body: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(),
-                    WelcomeCard(),
-                    PageViewCard(),
-                    QuickActionsCard(),
-                    Container(),
-                  ],
-                )
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+          appBar: AppBar(
+            leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
+            title: Text(
+              "Dignifi",
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  height: 0.1
               ),
-            );
-          }
-        }
-        return Text('Error: Cannot Reach Here');
-      }
+            ),
+            titleSpacing: 0,
+            centerTitle: false,
+          ),
+          backgroundColor: boxGrayColor,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(),
+              WelcomeCard(),
+              PageViewCard(),
+              QuickActionsCard(),
+              Container(),
+            ],
+          )
+      ),
     );
   }
 }
@@ -208,165 +187,158 @@ class ActivityProgressCard extends StatefulWidget {
 class _ActivityProgressCardState extends State<ActivityProgressCard> {
   @override
   Widget build(BuildContext context) {
-    final stepsCategoryVM = context.watch<TaskGroupViewModel>();
-    return ChangeNotifierProvider(
-      create: (_) => TaskViewModel(taskGroup: widget.group),
-      child: Builder(builder: (context) {
-          final tasksVM = context.watch<TaskViewModel>();
-          String undoneTask = tasksVM.getNextUndoneTask()?.title ?? 'All Completed!';
-          return Container(
-            decoration: grayBoxDecoration,
-            padding: EdgeInsets.all(16),
-            margin: EdgeInsets.only(right: 8),
-            alignment: Alignment.centerLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    final tasksVM = context.watch<TaskGroupViewModel>();
+    String undoneTask = tasksVM.getNextUndoneTask(widget.group)?.title ?? 'All Completed!';
+    return Container(
+        decoration: grayBoxDecoration,
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.only(right: 8),
+        alignment: Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          spacing: 16,
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              spacing: 16,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          child: Icon(cardIcons[tasksVM.taskGroup.groupId], color: secondaryColor, size: 30,),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              tasksVM.taskGroup.groupName,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Text(
-                              tasksVM.taskGroup.groupExplanation,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    SizedBox(
+                      width: 40,
+                      child: Icon(cardIcons[widget.group.groupId], color: secondaryColor, size: 30,),
                     ),
-                    Stack(
-                      alignment: Alignment.center,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(
-                            value: tasksVM.progressRatio(),
-                            strokeWidth: 4,
-                            color: secondaryColor,
-                          ),
-                        ),
                         Text(
-                          tasksVM.progressPercent(),
+                          widget.group.groupName,
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  spacing: 4,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Progress",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
                           ),
                         ),
                         Text(
-                          tasksVM.progressText(),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    LinearProgressIndicator(
-                      minHeight: 10,
-                      value: tasksVM.progressRatio(),
-                      borderRadius: BorderRadius.circular(defaultBorderRadius),
-                      backgroundColor: boxGrayColor,
-                      color: secondaryColor,
-                    ),
-                    SizedBox(height: 10,),
-                    Row(
-                      spacing: 8,
-                      children: [
-                        Icon(undoneTask == 'All Completed!' ? Icons.local_fire_department_sharp : Icons.check_box_outline_blank, color: Colors.black54,),
-                        Text(
-                          undoneTask,
+                          widget.group.groupExplanation,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                           ),
-                        )
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
-                Material(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(defaultBorderRadius),
-                  elevation: 5,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                          ChangeNotifierProvider.value(
-                            value: stepsCategoryVM,
-                            child: PlaybookDetailScreen(category: widget.group),
-                          )
-                        ),
-                      ).then((_) {
-                            setState(() {
-                              });
-                          });
-                    },
-                    borderRadius: BorderRadius.circular(defaultBorderRadius),
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(defaultBorderRadius),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Continue Playbook",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold
-                        ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(
+                        value: tasksVM.progressRatio(widget.group),
+                        strokeWidth: 4,
+                        color: secondaryColor,
                       ),
                     ),
-                  ),
+                    Text(
+                      tasksVM.progressPercent(widget.group),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              spacing: 4,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Progress",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      tasksVM.progressText(widget.group),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                LinearProgressIndicator(
+                  minHeight: 10,
+                  value: tasksVM.progressRatio(widget.group),
+                  borderRadius: BorderRadius.circular(defaultBorderRadius),
+                  backgroundColor: boxGrayColor,
+                  color: secondaryColor,
+                ),
+                SizedBox(height: 10,),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Icon(undoneTask == 'All Completed!' ? Icons.local_fire_department_sharp : Icons.check_box_outline_blank, color: Colors.black54,),
+                    Text(
+                      undoneTask,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    )
+                  ],
                 )
               ],
+            ),
+            Material(
+              color: primaryColor,
+              borderRadius: BorderRadius.circular(defaultBorderRadius),
+              elevation: 5,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            ChangeNotifierProvider.value(
+                              value: tasksVM,
+                              child: PlaybookDetailScreen(group: widget.group),
+                            )
+                    ),
+                  ).then((_) {
+                    setState(() {
+                    });
+                  });
+                },
+                borderRadius: BorderRadius.circular(defaultBorderRadius),
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(defaultBorderRadius),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Continue Playbook",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              ),
             )
-          );
-        }
-      )
+          ],
+        )
     );
   }
 }
