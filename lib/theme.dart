@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-const Color primaryColor = Color (0xFF807ED5);
-const Color primaryColorLight = Color (0xFFB3B2DF);
-const Color secondaryColor = Color (0xFF5443ED);
-const Color secondaryColorLight = Color (0xFF7163EE);
+const Color primaryColor = Color(0xFF807ED5);
+const Color primaryColorLight = Color(0xFFB3B2DF);
+const Color secondaryColor = Color(0xFF5443ED);
+const Color secondaryColorLight = Color(0xFF7163EE);
 
 class AppTheme {
   static ThemeData lightTheme(BuildContext context) {
     return ThemeData(
-      //fontFamily: "FontName",
+      fontFamily: "OpenSans",
       colorSchemeSeed: Colors.white,
       canvasColor: Colors.white,
       dividerColor: Colors.white,
@@ -17,6 +17,24 @@ class AppTheme {
       cardColor: Colors.white,
       unselectedWidgetColor: Colors.white,
       dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.all(Colors.white),
+        checkColor: WidgetStateProperty.all(Colors.white),
+        overlayColor: WidgetStateProperty.resolveWith<Color?>(
+          (states) {
+            if (states.contains(WidgetState.pressed)) {
+              return primaryColorLight; // 누르고 있을 때 색
+            }
+            return null;
+          },
+        ),
+      ),
     );
   }
 }
@@ -36,3 +54,16 @@ const double defaultPadding = 16.0;
 const double defaultBorderRadius = 12.0;
 const Duration defaultDuration = Duration(milliseconds: 300);
 const double defaultElevation = 6.0;
+
+
+final BoxDecoration primaryBoxDecoration = BoxDecoration(
+  borderRadius: BorderRadius.circular(defaultBorderRadius),
+  color: primaryColor,
+);
+
+final BoxDecoration grayBoxDecoration = BoxDecoration(
+  borderRadius: BorderRadius.circular(defaultBorderRadius),
+  color: Colors.white,
+  border: Border.all(color: dividerNormal, width: 1),
+);
+
