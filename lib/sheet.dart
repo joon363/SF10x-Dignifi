@@ -46,7 +46,7 @@ class _MainPageState extends State<MainPage> {
               Column(
                 children: [
                   Material(
-                    color: secondaryColor,
+                    color: primaryColor,
                     shape: const CircleBorder(),
                     elevation: 5,
                     child: InkWell(
@@ -124,7 +124,7 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     Expanded(
                       child: Material(
-                        color: secondaryColor,
+                        color: primaryColor,
                         borderRadius: BorderRadius.circular(defaultBorderRadius),
                         elevation: 5,
                         child: InkWell(

@@ -16,7 +16,7 @@ class ChatViewModel extends ChangeNotifier {
     _messages.add(ChatMessage(isLoading: true, text: "...", loadingMessage: ""));
     notifyListeners();
 
-    final result = await callAPI(userText);
+    final result = await sendChatbotRequestAPI(userText);
     _messages.removeWhere((m) => m.isLoading);
     if (result == null) {
       _messages.add(ChatMessage(

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewModels/stepsViewModel.dart';
-import '../models/stepsModel.dart';
+import '../viewModels/taskViewModel.dart';
+import '../models/taskModel.dart';
 import '../theme.dart';
 
 class PlaybookDetailScreen extends StatelessWidget {
-  final StepCategory category;
+  final TaskGroup category;
   const PlaybookDetailScreen({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
+    final taskGroupVM = context.watch<TaskGroupViewModel>();
     return ChangeNotifierProvider(
-      create: (_) => StepsViewModel(category: category),
+      create: (_) => TaskViewModel(taskGroup: category),
       child: SafeArea(
         top: false,
         child: Scaffold(
@@ -21,6 +22,7 @@ class PlaybookDetailScreen extends StatelessWidget {
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.of(context).pop();
+                taskGroupVM.update();
               },
             ),
             title: Text("Playbook Detail",
@@ -51,7 +53,7 @@ class ActivityProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<StepsViewModel>();
+    final vm = context.watch<TaskViewModel>();
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -62,9 +64,9 @@ class ActivityProgressCard extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(vm.category.title,
+                      Text(vm.taskGroup.groupName,
                         style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold)),
-                      Text(vm.category.subtitle, style: TextStyle(color: Colors.black, fontSize: 14)),
+                      Text(vm.taskGroup.groupExplanation, style: TextStyle(color: Colors.black, fontSize: 14)),
                     ]),
                 ]),
               Stack(alignment: Alignment.center, children: [
@@ -72,12 +74,12 @@ class ActivityProgressCard extends StatelessWidget {
                     height: 50,
                     width: 50,
                     child: CircularProgressIndicator(
-                      value: vm.progressPercent(),
+                      value: vm.progressRatio(),
                       strokeWidth: 4,
                       color: primaryColor,
                     ),
                   ),
-                  Text("${(vm.progressPercent() * 100).round()}%",
+                  Text(vm.progressPercent(),
                     style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
                 ]),
             ]),
@@ -92,7 +94,7 @@ class ActivityProgressCard extends StatelessWidget {
           ),
           LinearProgressIndicator(
             minHeight: 10,
-            value: vm.progressPercent(),
+            value: vm.progressRatio(),
             borderRadius: BorderRadius.circular(10),
             backgroundColor: boxGrayColor,
             color: primaryColor,
@@ -108,7 +110,7 @@ class QuickActionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<StepsViewModel>();
+    final vm = context.watch<TaskViewModel>();
 
     return Container(
       decoration: grayBoxDecoration,
@@ -137,7 +139,9 @@ class QuickActionsCard extends StatelessWidget {
                       children: [
                         Checkbox(
                           value: step.done,
-                          onChanged: (_) => vm.toggle(i),
+                          onChanged: (_) {
+                            vm.toggle(i);
+                          },
                           activeColor: Colors.green[300],
                         ),
                         Expanded(
@@ -148,7 +152,7 @@ class QuickActionsCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 15,
                                   decoration: step.done ? TextDecoration.lineThrough : null)),
-                              Text(step.subtitle, style: TextStyle(color: Colors.grey)),
+                              Text(step.explanation, style: TextStyle(color: Colors.grey)),
                               Container(
                                 margin: EdgeInsets.only(top: 4),
                                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),

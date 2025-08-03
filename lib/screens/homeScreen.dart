@@ -1,56 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:reentry/datas/stepsData.dart';
-import 'package:reentry/models/stepsModel.dart';
+import 'package:reentry/datas/taskData.dart';
+import 'package:reentry/models/taskModel.dart';
 import 'package:reentry/screens/chatbotScreen.dart';
-import 'package:reentry/viewModels/stepsViewModel.dart';
+import 'package:reentry/viewModels/taskViewModel.dart';
 import 'package:reentry/screens/playbookDetailScreen.dart';
 import '../theme.dart';
 
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<void> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = context.read<TaskGroupViewModel>().fetch();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
-          title: Text(
-            "Dignifi",
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              height: 0.1
-            ),
-          ),
-          titleSpacing: 0,
-          centerTitle: false,
-        ),
-        backgroundColor: boxGrayColor,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                spacing: 16,
-                children: [
-                  Container(),
-                  WelcomeCard(),
-                  PageViewCard(),
-                  QuickActionsCard(),
-                  RecentActivityCard(),
-                  SizedBox(height: 50,)
-                ],
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot){
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return SafeArea(
+              top: false,
+              child: Scaffold(
+                  appBar: AppBar(
+                    leading: Padding(padding: EdgeInsets.all(8), child: SvgPicture.asset(width: 30, height: 40, 'assets/images/logo.svg')),
+                    title: Text(
+                      "Dignifi",
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          height: 0.1
+                      ),
+                    ),
+                    titleSpacing: 0,
+                    centerTitle: false,
+                  ),
+                  backgroundColor: boxGrayColor,
+                  body: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          spacing: 16,
+                          children: [
+                            Container(),
+                            WelcomeCard(),
+                            PageViewCard(),
+                            QuickActionsCard(),
+                            RecentActivityCard(),
+                            SizedBox(height: 50,)
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
               ),
-            ),
-          ],
-        )
-      ),
+            );
+          }
+        }
+        return Text('Error: Cannot Reach Here');
+      }
     );
   }
 }
@@ -62,62 +90,63 @@ class WelcomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<TaskGroupViewModel>();
     return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            primaryColor,
-            primaryColorDark,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 4,
-        children: [
-          Text(
-            "Welcome back, Terran!",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold
-            ),
+        height: 100,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              primaryColor,
+              primaryColorDark,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: LinearProgressIndicator(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 4,
+          children: [
+            Text(
+              "Welcome back, Terran!",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(child: LinearProgressIndicator(
                   minHeight: 10,
-                  value: 0.2,
+                  value: vm.totalProgressRatio,
                   borderRadius: BorderRadius.circular(10),
                   backgroundColor: primaryColorLight,
                   color: Colors.white,
                 ),),
-              Text(
-                "20%",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+                Text(
+                  vm.totalProgressPercent,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
                 ),
+              ],),
+            Text(
+              "Great momentum!",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
               ),
-            ],),
-          Text(
-            "Great momentum!",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
             ),
-          ),
-        ],
-      )
+          ],
+        )
     );
   }
 }
@@ -137,6 +166,7 @@ class _PageViewCardState extends State<PageViewCard> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<TaskGroupViewModel>();
     return Column(
       children: [
         SizedBox(
@@ -146,7 +176,7 @@ class _PageViewCardState extends State<PageViewCard> {
             onPageChanged: (i) => setState(() => _pageIndex = i),
             itemCount: 3,
             scrollDirection: Axis.horizontal,
-            itemBuilder: (_, i) => ActivityProgressCard(category: categories[i]),
+            itemBuilder: (_, i) => ActivityProgressCard(group: vm.groups[i]),
           ),
         ),
         Row(
@@ -169,10 +199,10 @@ class _PageViewCardState extends State<PageViewCard> {
 }
 
 class ActivityProgressCard extends StatefulWidget {
-  final StepCategory category;
+  final TaskGroup group;
   const ActivityProgressCard({
     super.key,
-    required this.category
+    required this.group
   });
 
   @override
@@ -182,10 +212,11 @@ class ActivityProgressCard extends StatefulWidget {
 class _ActivityProgressCardState extends State<ActivityProgressCard> {
   @override
   Widget build(BuildContext context) {
+    final stepsCategoryVM = context.watch<TaskGroupViewModel>();
     return ChangeNotifierProvider(
-      create: (_) => StepsViewModel(category: widget.category),
+      create: (_) => TaskViewModel(taskGroup: widget.group),
       child: Builder(builder: (context) {
-          final vm = context.watch<StepsViewModel>();
+          final tasksVM = context.watch<TaskViewModel>();
           return Container(
             decoration: grayBoxDecoration,
             padding: EdgeInsets.all(16),
@@ -209,7 +240,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              Provider.of<StepsViewModel>(context).category.title,
+                              tasksVM.taskGroup.groupName,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -217,7 +248,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                               ),
                             ),
                             Text(
-                              Provider.of<StepsViewModel>(context).category.subtitle,
+                              tasksVM.taskGroup.groupExplanation,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 12,
@@ -231,12 +262,12 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                       alignment: Alignment.center,
                       children: [
                         CircularProgressIndicator(
-                          value: vm.progressPercent(),
+                          value: tasksVM.progressRatio(),
                           strokeWidth: 4,
                           color: primaryColor,
                         ),
                         Text(
-                          "${(vm.progressPercent() * 100).round()}%",
+                          tasksVM.progressPercent(),
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 12,
@@ -260,7 +291,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                           ),
                         ),
                         Text(
-                          vm.progressText(),
+                          tasksVM.progressText(),
                           style: TextStyle(
                             color: primaryColor,
                             fontSize: 12,
@@ -271,7 +302,7 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                     ),
                     LinearProgressIndicator(
                       minHeight: 10,
-                      value: vm.progressPercent(),
+                      value: tasksVM.progressRatio(),
                       borderRadius: BorderRadius.circular(10),
                       backgroundColor: boxGrayColor,
                       color: primaryColor,
@@ -286,7 +317,13 @@ class _ActivityProgressCardState extends State<ActivityProgressCard> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => PlaybookDetailScreen(category: widget.category,)),
+                        MaterialPageRoute(
+                            builder: (_) =>
+                              ChangeNotifierProvider.value(
+                                value: stepsCategoryVM, // 기존 ViewModel 인스턴스
+                                child: PlaybookDetailScreen(category: widget.group),        // PageB가 이 ViewModel을 사용할 수 있음
+                              )
+                        ),
                       ).then((_) {
                             setState(() {
                               });
